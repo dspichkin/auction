@@ -1,0 +1,10 @@
+<div style="margin: 20px;display: flex;">
+  <span *ngFor="let star of stars; let i = index">
+    <i *ngIf="star && !readonly" class="material-icons" (click)="fillStarsWithColor(i)"  style="cursor: pointer;">star</i>
+    <i *ngIf="!star && !readonly" class="material-icons" (click)="fillStarsWithColor(i)"  style="cursor: pointer;">star_border</i>
+    
+    <i *ngIf="star && readonly" class="material-icons">star</i>
+    <i *ngIf="!star && readonly" class="material-icons">star_border</i>
+  </span>
+  <span *ngIf="rating" style="margin-left: 10px">{{ rating | number: '.0-2'}} stars</span>
+</div>

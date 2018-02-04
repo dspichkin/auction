@@ -1,0 +1,11 @@
+<div class="card" style="margin: 10px 0;">
+  <img src="http://placehold.it/320x150">
+  <div class="card-body">
+    <h4 class="pull-right">{{ product.price }}</h4>
+    <h5 class="card-title"><a [routerLink]="['/products', product.id]"> {{ product.title }}</a></h5>
+    <p class="card-text">{{ product.description }}</p>
+  </div>
+  <div>
+    <auction-stars [rating]="product.rating"></auction-stars>
+  </div>
+</div>
