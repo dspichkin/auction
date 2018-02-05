@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { AppRoutes } from './app.routes';
 import { CarouselComponent } from './components/carousel/carousel';
 import { FooterComponent } from './components/footer/footer';
 import { NavbarComponent } from './components/navbar/navbar';
@@ -15,6 +16,7 @@ import { SearchComponent } from './components/search/search';
 import { StarsComponent } from './components/stars/stars';
 import { HomeComponent } from './components/home/home';
 import { ProductDetailComponent } from './components/product-detail/product-detail';
+
 
 import { ONLINE_AUCTION_SERVICES } from './services/services';
 import { FilterPipe } from './components/pipes/filter-pipe';
@@ -37,13 +39,7 @@ import { FilterPipe } from './components/pipes/filter-pipe';
     ReactiveFormsModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot([{
-        path: '',
-        component: HomeComponent
-      }, {
-        path: 'products/:productId',
-        component: ProductDetailComponent
-      }])
+    RouterModule.forRoot(AppRoutes)
   ],
   providers: [
     ONLINE_AUCTION_SERVICES,

@@ -14,6 +14,9 @@ Uses:
 - Angular: 5.2
 - Bootstrap: 4.0
 
+#### Run test module
+
+ng test
 
 #### Screenshots:
 
