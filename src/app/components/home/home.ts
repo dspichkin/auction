@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/debounceTime';
 
@@ -15,18 +16,14 @@ import { FilterPipe } from '../pipes/filter-pipe';
   templateUrl: './home.html'
 })
 export class HomeComponent {
-  products: Product[] = [];
-  titleFilter: FormControl = new FormControl();
-  filterCriteria: string;
+  products: Observable<Product[]>;
 
   constructor(private productService: ProductService) {
     this.products = this.productService.getProducts();
 
-    this.titleFilter.valueChanges
-      .debounceTime(100)
-      .subscribe(
-        value => this.filterCriteria = value,
-        error => console.error(error)
-        );
+    this.productService.searchEvent
+      .subscribe(params => {
+        this.products = this.productService.search(params);
+      }, error => console.error(error), () => console.log('DONE'));
   }
 }

@@ -1,4 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Http, URLSearchParams } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/operator/map';
+
 
 export class Product {
   constructor(
@@ -22,94 +27,59 @@ export class Review {
   }
 }
 
+export interface ProductSearchParams {
+  title: string;
+  minPrice: number;
+  maxPrice: number;
+}
+
+
+function encodeParams(params: any): URLSearchParams {
+  return Object.keys(params)
+    .filter(key => params[key])
+    .reduce((accum: URLSearchParams, key: string) => {
+      accum.append(key, params[key]);
+      return accum;
+    }, new URLSearchParams());
+}
+
+const base_server = 'http://localhost:8080/';
+
 @Injectable()
 export class ProductService {
-  getProducts(): Array<Product> {
-    return products.map(p => new Product(p.id, p.title, p.price, p.rating, p.description, p.categories));
+
+  searchEvent: EventEmitter<any> = new EventEmitter();
+
+
+  constructor(private http: Http) {}
+
+  getProducts(): Observable<Product[]> {
+    return this.http.get(base_server + 'products')
+      .map(response => response.json());
   }
 
-  getProductById(productId: number): Product {
-    return products.find(p => p.id === productId);
+  getProductById(productId: number): Observable<Product> {
+    return this.http.get(base_server + `products/${productId}`)
+      .map(response => response.json());
   }
 
-  getReviewsForProduct(productId: number): Review[] {
-    return reviews
-      .filter(r => r.productId === productId)
-      .map(r => new Review(r.id, r.productId, new Date(r.timestamp), r.user, r.rating, r.comment));
+  getReviewsForProduct(productId: number): Observable<Review[]> {
+    return this.http
+      .get(base_server + `products/${productId}/reviews`)
+      .map(response => response.json())
+      .map(reviews => reviews.map(
+        (r: any) => new Review(r.id, r.productId, new Date(r.timestamp), r.user, r.rating, r.comment)));
   }
 
   getAllCategories(): string [] {
     return ['Books', 'Electronics', 'Hardware'];
   }
 
-}
-
-
-const products = [
-  {
-    'id': 0,
-    'title': 'First Product',
-    'price': 24.99,
-    'rating': 4.3,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['electronics', 'hardware']
-  },
-  {
-    'id': 1,
-    'title': 'Second Product',
-    'price': 64.99,
-    'rating': 3.5,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['books']
-  },
-  {
-    'id': 2,
-    'title': 'Third Product',
-    'price': 74.99,
-    'rating': 4.2,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['electronics']
-  },
-  {
-    'id': 3,
-    'title': 'Fourth Product',
-    'price': 84.99,
-    'rating': 3.9,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['hardware']
-  },
-  {
-    'id': 4,
-    'title': 'Fifth Product',
-    'price': 94.99,
-    'rating': 5,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['electronics', 'hardware']
-  },
-  {
-    'id': 5,
-    'title': 'Sixth Product',
-    'price': 54.99,
-    'rating': 4.6,
-    'description': 'This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'categories': ['books']
+  search(params: ProductSearchParams): Observable<Product[]> {
+    return this.http
+      .get('/products', {search: encodeParams(params)})
+      .map(response => response.json());
   }
-];
 
-const reviews = [
-{
-  'id': 0,
-  'productId': 0,
-  'timestamp': '2014-05-20T02:17:00+00:00',
-  'user': 'User 1',
-  'rating': 5,
-  'comment': 'Aenean vestibulum velit id placerat posuere. Praesent...'
-}, {
-  'id': 1,
-  'productId': 0,
-  'timestamp': '2014-05-20T02:53:00+00:00',
-  'user': 'User 2',
-  'rating': 3,
-  'comment': 'Aenean vestibulum velit id placerat posuere. Praesent... '
-}];
+}
 

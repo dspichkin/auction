@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { CarouselComponent } from './components/carousel/carousel';
@@ -15,7 +16,7 @@ import { StarsComponent } from './components/stars/stars';
 import { HomeComponent } from './components/home/home';
 import { ProductDetailComponent } from './components/product-detail/product-detail';
 
-import { ProductService } from './services/product-service';
+import { ONLINE_AUCTION_SERVICES } from './services/services';
 import { FilterPipe } from './components/pipes/filter-pipe';
 
 @NgModule({
@@ -35,6 +36,7 @@ import { FilterPipe } from './components/pipes/filter-pipe';
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,
+    HttpModule,
     RouterModule.forRoot([{
         path: '',
         component: HomeComponent
@@ -44,7 +46,7 @@ import { FilterPipe } from './components/pipes/filter-pipe';
       }])
   ],
   providers: [
-    ProductService,
+    ONLINE_AUCTION_SERVICES,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

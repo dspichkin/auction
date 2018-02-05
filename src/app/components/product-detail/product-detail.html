@@ -2,13 +2,24 @@
   <img class="card-img-top" src="http://placehold.it/820x320">
   <div class="card-body">
     <div>
-      <h4 class="pull-right">{{ product.price }}</h4>
-      <h4>{{ product.title }}</h4>
-      <p>{{ product.description }}</p>
+      <h4 class="pull-right">{{ product?.price | currency }}</h4>
+      <h4>{{ product?.title }}</h4>
+      <p>{{ product?.description }}</p>
     </div>
     <div class="ratings">
-      <p class="pull-right">{{ reviews.length }} reviews</p>
-      <p><auction-stars [rating]="product.rating"></auction-stars></p>
+      <p class="pull-right">{{ reviews?.length }} reviews</p>
+      <p><auction-stars [rating]="product?.rating"></auction-stars></p>
+    </div>
+
+    <div class="thumbnail" style="margin: 10px 0;">
+      <button class="btn btn-primary"
+              [ngClass]="{active: isWatching, 'btn-warning': isWatching}"
+              (click)="toggleWatchProduct()"
+              role="button">
+        {{ isWatching ? 'Stop watching' : 'Watch' }}
+      </button>
+
+      <label>Current bid: {{ currentBid | currency }}</label>
     </div>
 
     <div class="card-footer" id="reviews-anchor">
